@@ -31,8 +31,8 @@ If you need your language you may contact with me or open with issue. Where you 
 
 ## Additional information
 
-### License GPLv3
+#### License GPLv3
 
-### Special thanks to [Aleksandra Daskevica](mailto:aleksandra.daskevica@cgi.com)
+#### Special thanks to [Aleksandra Daskevica](mailto:aleksandra.daskevica@cgi.com)
 
-### [Based on](https://github.com/MaTeMaTuK/gantt-task-react)
+#### [Based on](https://github.com/MaTeMaTuK/gantt-task-react)
