@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "author": "MaTeMaTuK <maksym.vikarii@gmail.com>",
   "description": "Project containing your PowerApps Component Framework (PCF) control.",
+  "license": "GPLv3",
   "scripts": {
     "build": "pcf-scripts build",
     "clean": "pcf-scripts clean",
