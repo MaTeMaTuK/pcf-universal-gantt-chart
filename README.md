@@ -27,6 +27,8 @@
 
 For undefined colors Gantt shell create color theme, which based on entity color.
 
+If you need your language you may contact with me or open with issue. Where you may share your translations.
+
 ## Additional information
 
 ### License GPLv3
