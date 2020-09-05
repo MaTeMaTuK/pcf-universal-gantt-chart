@@ -1,0 +1,15 @@
+.Gantt-Tooltip_Container {
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.Gantt-Tooltip_Paragraph__Information {
+  font-weight: 700;
+}
+
+.Gantt-Tooltip_Paragraph {
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: #666;
+}

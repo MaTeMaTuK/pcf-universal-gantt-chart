@@ -1,0 +1,62 @@
+.Gantt-Table {
+  display: table;
+  border-bottom: #e6e4e4 1px solid;
+  border-top: #e6e4e4 1px solid;
+  border-left: #e6e4e4 1px solid;
+}
+
+.Gantt-Table_Header {
+  display: table-row;
+  list-style: none;
+}
+
+.Gantt-Table_Header-Separator {
+  border-right: 1px solid rgb(196, 196, 196);
+  opacity: 1;
+  margin-left: -2px;
+}
+
+.Gantt-Table_Header-Item {
+  display: table-cell;
+  vertical-align: -webkit-baseline-middle;
+  vertical-align: middle;
+}
+
+.Gantt-Button {
+  background-color: transparent;
+  overflow: visible;
+  border-radius: inherit;
+  cursor: pointer;
+  text-indent: 0px;
+  text-shadow: none;
+  text-align: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  border-style: none;
+  border-image: initial;
+  outline: none;
+  font-family: "Segoe UI Regular", SegoeUI, "Segoe UI";
+}
+
+.Gantt-Header {
+  list-style: none;
+  -ms-box-orient: horizontal;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.Gantt-Button_Header {
+  margin: 0.5rem;
+  text-transform: uppercase;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.Gantt-Header_Separator {
+  font-family: "Segoe UI Regular", SegoeUI, "Segoe UI";
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 0.5rem;
+}

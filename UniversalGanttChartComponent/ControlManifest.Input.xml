@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+  <control namespace="GanttGridComponent" constructor="UniversalGanttChartComponent" version="0.0.1" display-name-key="Universal Gantt Chart Component" description-key="UniversalGanttChartComponent description" control-type="standard">
+    <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
+     <data-set name="entityDataSet" display-name-key="Entity-Grid">
+      <property-set name="displayName" display-name-key="Record Display Name" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="bound" required="true" />
+      <property-set name="scheduledStart" display-name-key="Start" description-key="Scheduled start date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
+      <property-set name="scheduledEnd" display-name-key="End" description-key="Scheduled end date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
+      <property-set name="progress" display-name-key="Progress" description-key="From 0 to 100. Whole Number" of-type="Whole.None" usage="bound" required="false" />
+    </data-set>
+
+    <property name="viewMode" display-name-key="Default Duration View" description-key=" " of-type="Enum" usage="input" required="false" default-value="Day">
+      <value name="quarter" display-name-key="Quarter of Day">Quarter Day</value>
+      <value name="half" display-name-key="Half of Day">Half Day</value>
+      <value name="day" display-name-key="Day">Day</value>
+      <value name="week" display-name-key="Week">Week</value>
+      <value name="Month" display-name-key="Month">Month</value>
+    </property>
+
+    <property name="defaultListCellWidth" display-name-key="Default List`s Cell Width" description-key="Default Cell Width for List" of-type="Whole.None" usage="input" required="false" default-value="155"/>
+    <property name="timeStep" display-name-key="Time Step" description-key="Time step for task for drag event" of-type="Whole.None" usage="input" required="false" default-value="300000"/>
+
+    <property name="backgroundColor" display-name-key="Background Color" description-key="Defines Bar background color" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="backgroundSelectedColor" display-name-key="Background Selected Color" description-key="Defines Bar background color on select" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="progressColor" display-name-key="Progress Color" description-key="Defines Bar progress color" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="progressSelectedColor" display-name-key="Progress Selected Color" description-key="Defines Bar progress color on select" of-type="SingleLine.Text" usage="input" required="false"/>
+    <resources>
+      <code path="index.ts" order="1"/>
+      <css path="../node_modules/gantt-task-react/dist/index.css" order="1" />
+      <css path="./components/css/task-list-header.css" order="1"/>
+      <css path="./components/css/gantt-footer.css" order="1"/>
+      <css path="./components/css/task-list-table.css" order="1"/>
+      <css path="./components/css/gantt-tooltip.css" order="2"/>
+      <resx path="strings/UniversalGanttChartComponent.1033.resx" version="1.0.0" />
+      <resx path="strings/UniversalGanttChartComponent.1031.resx" version="1.0.0" />
+      <resx path="strings/UniversalGanttChartComponent.1053.resx" version="1.0.0" />
+      <resx path="strings/UniversalGanttChartComponent.1058.resx" version="1.0.0" />
+    </resources>
+    <feature-usage>
+      <uses-feature name="Utility" required="true" />
+      <uses-feature name="UserSettings" required="true" />
+      <uses-feature name="WebAPI" required="true" />
+      <uses-feature name="Navigation" required="true" />
+    </feature-usage>
+  </control>
+</manifest>

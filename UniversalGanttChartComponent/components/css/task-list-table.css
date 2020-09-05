@@ -1,0 +1,32 @@
+.Gantt-Task-List_Wrapper {
+  display: table;
+  border-bottom: #e6e4e4 1px solid;
+  border-left: #e6e4e4 1px solid;
+}
+
+.Gantt-Task-List_Row {
+  display: table-row;
+  text-overflow: ellipsis;
+}
+
+.Gantt-Task-List_Row:nth-of-type(even) {
+  background-color: #f5f5f5;
+}
+
+.Gantt-Task-List_Cell {
+  display: table-cell;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Gantt-Task-List_Cell__Link {
+  color: rgb(4, 89, 153);
+  cursor: pointer;
+}
+
+.Gantt-Task-List_Cell__Link:hover {
+  color: rgb(4, 67, 124);
+  text-decoration: underline;
+}
