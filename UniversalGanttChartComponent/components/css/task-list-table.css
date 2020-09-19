@@ -30,3 +30,12 @@
   color: rgb(4, 67, 124);
   text-decoration: underline;
 }
+
+.Gantt-Task-List_Cell-Select__Icon {
+  min-width: 30px;
+  text-align: center;
+}
+
+.Gantt-Task-List_Cell-Select__Selected::after {
+  content: "\2714";
+}

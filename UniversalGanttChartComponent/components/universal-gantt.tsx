@@ -18,7 +18,7 @@ import { creatTaskListLocal } from "./task-list-table";
 export type UniversalGanttProps = {
   context: ComponentFramework.Context<IInputs>;
   tasks: Task[];
-  ganttHeight: number;
+  ganttHeight?: number;
   recordDisplayName: string;
   startDisplayName: string;
   endDisplayName: string;
@@ -37,7 +37,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   const [view, setView] = React.useState(props.viewMode);
   const context = props.context;
 
-  const handleDateChange = (task: Task) => {
+  const handleDateChange = async (task: Task) => {
     const recordRef = context.parameters.entityDataSet.records[
       task.id
     ].getNamedReference();
@@ -45,17 +45,20 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
 
-    const promise = context.webAPI.updateRecord(entityName, task.id, {
-      [props.endFieldName]: task.end,
-      [props.startFieldName]: task.start,
-    });
-    promise.catch((e: ComponentFramework.NavigationApi.ErrorDialogOptions) => {
+    try {
+      await context.webAPI.updateRecord(entityName, task.id, {
+        [props.endFieldName]: task.end,
+        [props.startFieldName]: task.start,
+      });
+    } catch (e) {
       context.navigation.openErrorDialog(e);
       context.parameters.entityDataSet.refresh();
-    });
+      return false;
+    }
+    return true;
   };
 
-  const handleProgressChange = (task: Task) => {
+  const handleProgressChange = async (task: Task) => {
     const recordRef = context.parameters.entityDataSet.records[
       task.id
     ].getNamedReference();
@@ -63,13 +66,16 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
 
-    const promise = context.webAPI.updateRecord(entityName, task.id, {
-      [props.progressFieldName]: task.progress,
-    });
-    promise.catch((e: ComponentFramework.NavigationApi.ErrorDialogOptions) => {
+    try {
+      await context.webAPI.updateRecord(entityName, task.id, {
+        [props.progressFieldName]: task.progress,
+      });
+    } catch (e) {
       context.navigation.openErrorDialog(e);
       context.parameters.entityDataSet.refresh();
-    });
+      return false;
+    }
+    return true;
   };
 
   const handleTaskDelete = async (task: Task) => {
@@ -77,7 +83,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
       text: context.resources.getString("Confirm"),
     });
     if (!confirm.confirmed) {
-      throw "Delete canceled";
+      return false;
     }
 
     const recordRef = context.parameters.entityDataSet.records[
@@ -86,11 +92,14 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
 
-    const promise = context.webAPI.deleteRecord(entityName, task.id);
-    promise.catch((e: ComponentFramework.NavigationApi.ErrorDialogOptions) => {
+    try {
+      await context.webAPI.deleteRecord(entityName, task.id);
+    } catch (e) {
       context.navigation.openErrorDialog(e);
       context.parameters.entityDataSet.refresh();
-    });
+      return false;
+    }
+    return true;
   };
 
   const handleOpenRecord = async (task: Task) => {
@@ -108,10 +117,17 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     context.navigation.openForm(entityOptions);
   };
 
+  const handleSelect = (task: Task, isSelected: boolean) => {
+    if (isSelected) {
+      context.parameters.entityDataSet.setSelectedRecordIds([task.id]);
+    } else {
+      context.parameters.entityDataSet.clearSelectedRecordIds();
+    }
+  };
+
   let options: StylingOption & EventOption = {
     fontSize: "14px",
-    fontFamily:
-      "Segoe UI, Segoe UI Web (West European), Segoe UI, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif",
+    fontFamily: "SegoeUI, Segoe UI",
     headerHeight: 50,
     rowHeight: 50,
     barCornerRadius: 0,
@@ -140,7 +156,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   }
 
   return (
-    <>
+    <div className="Gantt-Wrapper">
       <ViewSwitcher
         context={context}
         onViewChange={(viewMode) => {
@@ -155,8 +171,9 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
         onDoubleClick={handleOpenRecord}
         onDateChange={handleDateChange}
         onTaskDelete={handleTaskDelete}
+        onSelect={handleSelect}
       />
       <GanttFooter context={context} currentRecordsCount={props.tasks.length} />
-    </>
+    </div>
   );
 };

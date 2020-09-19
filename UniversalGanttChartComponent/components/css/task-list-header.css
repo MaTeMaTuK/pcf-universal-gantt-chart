@@ -35,7 +35,6 @@
   border-style: none;
   border-image: initial;
   outline: none;
-  font-family: "Segoe UI Regular", SegoeUI, "Segoe UI";
 }
 
 .Gantt-Header {
@@ -55,8 +54,16 @@
 }
 
 .Gantt-Header_Separator {
-  font-family: "Segoe UI Regular", SegoeUI, "Segoe UI";
   text-align: center;
   vertical-align: middle;
   margin-top: 0.5rem;
+}
+
+.Gantt-Header_Select__Icon {
+  min-width: 30px;
+  text-align: center;
+}
+
+.Gantt-Header_Select__Icon::after {
+  content: "\2714";
 }

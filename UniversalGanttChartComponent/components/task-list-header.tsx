@@ -25,6 +25,14 @@ export const createHeaderLocal = (
             height: headerHeight - 2,
           }}
         >
+          <div className="Gantt-Table_Header-Item Gantt-Header_Select__Icon" />
+          <div
+            className="Gantt-Table_Header-Separator"
+            style={{
+              height: headerHeight * 0.5,
+              marginTop: headerHeight * 0.2,
+            }}
+          />
           <div
             className="Gantt-Table_Header-Item"
             style={{

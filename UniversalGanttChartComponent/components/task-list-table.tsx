@@ -10,8 +10,19 @@ export const creatTaskListLocal = (
   fontSize: string;
   locale: string;
   tasks: Task[];
+  selectedTaskId: string;
+  setSelectedTask: (taskId: string) => void;
 }> => {
-  return ({ rowHeight, rowWidth, tasks, fontFamily, fontSize, locale }) => {
+  return ({
+    rowHeight,
+    rowWidth,
+    tasks,
+    fontFamily,
+    fontSize,
+    locale,
+    selectedTaskId,
+    setSelectedTask,
+  }) => {
     const dateTimeOptions = {
       weekday: "short",
       year: "numeric",
@@ -34,6 +45,22 @@ export const creatTaskListLocal = (
               key={`${t.id}row`}
             >
               <div
+                className={
+                  "Gantt-Task-List_Cell Gantt-Task-List_Cell-Select__Icon" +
+                  (selectedTaskId === t.id
+                    ? " Gantt-Task-List_Cell-Select__Selected"
+                    : "")
+                }
+                onClick={() => {
+                  if (selectedTaskId === t.id) {
+                    setSelectedTask("");
+                  } else {
+                    setSelectedTask(t.id);
+                  }
+                }}
+              />
+
+              <div
                 className="Gantt-Task-List_Cell Gantt-Task-List_Cell__Link"
                 style={{
                   minWidth: rowWidth,
@@ -50,6 +77,13 @@ export const creatTaskListLocal = (
                   minWidth: rowWidth,
                   maxWidth: rowWidth,
                 }}
+                onClick={() => {
+                  if (selectedTaskId === t.id) {
+                    setSelectedTask("");
+                  } else {
+                    setSelectedTask(t.id);
+                  }
+                }}
               >
                 &nbsp;{t.start.toLocaleDateString(locale, dateTimeOptions)}
               </div>
@@ -58,6 +92,13 @@ export const creatTaskListLocal = (
                 style={{
                   minWidth: rowWidth,
                   maxWidth: rowWidth,
+                }}
+                onClick={() => {
+                  if (selectedTaskId === t.id) {
+                    setSelectedTask("");
+                  } else {
+                    setSelectedTask(t.id);
+                  }
                 }}
               >
                 &nbsp;{t.end.toLocaleDateString(locale, dateTimeOptions)}

@@ -71,7 +71,6 @@ export class UniversalGanttChartComponent
       }
 
       const tasks = await this.generateTasks(context, dataset, !!progressField);
-      const additionalOffset = 150;
       const listCellWidth = !!context.parameters.defaultListCellWidth.raw
         ? `${context.parameters.defaultListCellWidth.raw}px`
         : "";
@@ -81,10 +80,15 @@ export class UniversalGanttChartComponent
         ? progressField.displayName
         : "";
 
+      let ganttHeight: number | undefined;
+      if (context.parameters.isSubgrid.raw === "0") {
+        ganttHeight = this._container.offsetHeight - 150;
+      }
+
       const gantt = React.createElement(UniversalGantt, {
         context,
         tasks,
-        ganttHeight: this._container.offsetHeight - additionalOffset,
+        ganttHeight: ganttHeight,
         recordDisplayName: nameField.displayName,
         startDisplayName: startField.displayName,
         endDisplayName: endField.displayName,
