@@ -1,6 +1,6 @@
 # pcf-universal-gantt-chart
 
-## Interactive PCF Gantt Chart Dynamics Grid
+## Interactive PCF Gantt Chart Control for Dynamics Grid
 
 ![example](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/blob/master/DocumentationAssets/ganttStandart.png)
 
@@ -27,12 +27,12 @@
 
 For undefined colors Gantt shell create color theme, which based on entity color.
 
-If you need your language you may contact with me or open with issue. Where you may share your translations.
+If you need your language you may contact with me or open an issue, where you may share your translations.
 
 ## Additional information
 
-### License GPLv3
+#### License GPLv3
 
-### Special thanks to [Aleksandra Daskevica](mailto:aleksandra.daskevica@cgi.com)
+#### Special thanks to [Aleksandra Daskevica](mailto:aleksandra.daskevica@cgi.com)
 
-### [Based on](https://github.com/MaTeMaTuK/gantt-task-react)
+#### [Based on](https://github.com/MaTeMaTuK/gantt-task-react)
