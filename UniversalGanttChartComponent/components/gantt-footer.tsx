@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IInputs } from "../generated/ManifestTypes";
 
-export const GanttFooter: React.SFC<{
+export const GanttFooter: React.FunctionComponent<{
   context: ComponentFramework.Context<IInputs>;
   currentRecordsCount: number;
 }> = ({ currentRecordsCount, context }) => {

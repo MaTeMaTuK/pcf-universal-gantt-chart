@@ -28,6 +28,7 @@ export type UniversalGanttProps = {
   endFieldName: string;
   progressFieldName: string;
   isProgressing: boolean;
+  crmUserTimeOffset: number;
   onViewChange: (viewMode: ViewMode) => void;
 } & EventOption &
   DisplayOption;
@@ -36,7 +37,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
 ) => {
   const [view, setView] = React.useState(props.viewMode);
   const context = props.context;
-
+  // Events
   const handleDateChange = async (task: Task) => {
     const recordRef = context.parameters.entityDataSet.records[
       task.id
@@ -47,8 +48,12 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
 
     try {
       await context.webAPI.updateRecord(entityName, task.id, {
-        [props.endFieldName]: task.end,
-        [props.startFieldName]: task.start,
+        [props.endFieldName]: new Date(
+          task.end.getTime() - props.crmUserTimeOffset * 60000
+        ),
+        [props.startFieldName]: new Date(
+          task.start.getTime() - props.crmUserTimeOffset * 60000
+        ),
       });
     } catch (e) {
       context.navigation.openErrorDialog(e);
@@ -125,6 +130,11 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     }
   };
 
+  // Styling
+  const formatDateShort = (value: Date, includeTime?: boolean) => {
+    return context.formatting.formatDateShort(value, includeTime);
+  };
+
   let options: StylingOption & EventOption = {
     fontSize: "14px",
     fontFamily: "SegoeUI, Segoe UI",
@@ -138,11 +148,14 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
       props.endDisplayName
     ),
     TooltipContent: createTooltip(
+      props.startDisplayName,
+      props.endDisplayName,
       props.progressDisplayName,
       context.resources.getString("Duration"),
-      context.resources.getString("Duration_Metric")
+      context.resources.getString("Duration_Metric"),
+      formatDateShort
     ),
-    TaskListTable: creatTaskListLocal(handleOpenRecord),
+    TaskListTable: creatTaskListLocal(handleOpenRecord, formatDateShort),
   };
 
   if (view === ViewMode.Month) {

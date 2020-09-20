@@ -47,6 +47,7 @@
       <uses-feature name="UserSettings" required="true" />
       <uses-feature name="WebAPI" required="true" />
       <uses-feature name="Navigation" required="true" />
+      <uses-feature name="Formatting" required="true" />
     </feature-usage>
   </control>
 </manifest>

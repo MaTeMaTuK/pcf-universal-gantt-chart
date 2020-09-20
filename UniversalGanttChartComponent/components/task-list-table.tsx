@@ -2,7 +2,8 @@ import * as React from "react";
 import { Task } from "gantt-task-react";
 
 export const creatTaskListLocal = (
-  onClick: (task: Task) => void
+  onClick: (task: Task) => void,
+  formatDateShort: (value: Date, includeTime?: boolean) => string
 ): React.FC<{
   rowHeight: number;
   rowWidth: string;
@@ -23,12 +24,7 @@ export const creatTaskListLocal = (
     selectedTaskId,
     setSelectedTask,
   }) => {
-    const dateTimeOptions = {
-      weekday: "short",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
+    debugger;
     return (
       <div
         className="Gantt-Task-List_Wrapper"
@@ -59,7 +55,9 @@ export const creatTaskListLocal = (
                   }
                 }}
               />
-
+              {/**
+               * Name
+               */}
               <div
                 className="Gantt-Task-List_Cell Gantt-Task-List_Cell__Link"
                 style={{
@@ -71,6 +69,9 @@ export const creatTaskListLocal = (
               >
                 &nbsp;{t.name}
               </div>
+              {/**
+               * Start Time
+               */}
               <div
                 className="Gantt-Task-List_Cell"
                 style={{
@@ -84,9 +85,13 @@ export const creatTaskListLocal = (
                     setSelectedTask(t.id);
                   }
                 }}
+                title={formatDateShort(t.start, true)}
               >
-                &nbsp;{t.start.toLocaleDateString(locale, dateTimeOptions)}
+                &nbsp;{formatDateShort(t.start, true)}
               </div>
+              {/**
+               * End Time
+               */}
               <div
                 className="Gantt-Task-List_Cell"
                 style={{
@@ -100,8 +105,9 @@ export const creatTaskListLocal = (
                     setSelectedTask(t.id);
                   }
                 }}
+                title={formatDateShort(t.end, true)}
               >
-                &nbsp;{t.end.toLocaleDateString(locale, dateTimeOptions)}
+                &nbsp;{formatDateShort(t.end, true)}
               </div>
             </div>
           );

@@ -10,7 +10,6 @@ type DataSet = ComponentFramework.PropertyTypes.DataSet;
 export class UniversalGanttChartComponent
   implements ComponentFramework.StandardControl<IInputs, IOutputs> {
   private _container: HTMLDivElement;
-  private _context: ComponentFramework.Context<IInputs>;
   private displayNameStr = "displayName";
   private scheduledStartStr = "scheduledStart";
   private scheduledEndStr = "scheduledEnd";
@@ -42,13 +41,15 @@ export class UniversalGanttChartComponent
    * Async wrapper for update view method
    */
   private async updateViewAsync(context: ComponentFramework.Context<IInputs>) {
-    this._context = context;
     const dataset = context.parameters.entityDataSet;
     const columns = dataset.columns;
     const nameField = columns.find((c) => c.alias === this.displayNameStr);
     const startField = columns.find((c) => c.alias === this.scheduledStartStr);
     const endField = columns.find((c) => c.alias === this.scheduledEndStr);
     const progressField = columns.find((c) => c.alias === this.progressStr);
+    const crmUserTimeOffset =
+      context.userSettings.getTimeZoneOffsetMinutes(new Date()) +
+      new Date().getTimezoneOffset();
 
     if (
       !nameField ||
@@ -70,7 +71,12 @@ export class UniversalGanttChartComponent
         this.locale = "en";
       }
 
-      const tasks = await this.generateTasks(context, dataset, !!progressField);
+      const tasks = await this.generateTasks(
+        context,
+        dataset,
+        crmUserTimeOffset,
+        !!progressField
+      );
       const listCellWidth = !!context.parameters.defaultListCellWidth.raw
         ? `${context.parameters.defaultListCellWidth.raw}px`
         : "";
@@ -84,7 +90,7 @@ export class UniversalGanttChartComponent
       if (context.parameters.isSubgrid.raw === "0") {
         ganttHeight = this._container.offsetHeight - 150;
       }
-
+      debugger;
       const gantt = React.createElement(UniversalGantt, {
         context,
         tasks,
@@ -101,6 +107,7 @@ export class UniversalGanttChartComponent
         isProgressing: !!progressField,
         locale: this.locale,
         viewMode: this.viewMode,
+        crmUserTimeOffset,
         onViewChange: this.handleViewModeChange,
       });
 
@@ -113,6 +120,7 @@ export class UniversalGanttChartComponent
   private async generateTasks(
     context: ComponentFramework.Context<IInputs>,
     dataset: ComponentFramework.PropertyTypes.DataSet,
+    crmUserTimeOffset: number,
     isProgressing: boolean
   ) {
     let entityTypesAndColors: {
@@ -149,8 +157,8 @@ export class UniversalGanttChartComponent
       tasks.push({
         id: record.getRecordId(),
         name,
-        start: new Date(start),
-        end: new Date(end),
+        start: new Date(new Date(start).getTime() + crmUserTimeOffset * 60000),
+        end: new Date(new Date(end).getTime() + crmUserTimeOffset * 60000),
         progress: progress,
         styles: { ...entityColorTheme },
       });
