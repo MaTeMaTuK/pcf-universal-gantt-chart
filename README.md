@@ -14,6 +14,7 @@
 | End Time\*                | Specifies end time display.                                       |
 | Record Display Name\*     | Specifies name on bar and list table.                             |
 | Progress                  | Specifies progress display.                                       |
+| IsSubgrid                 | Specifies gantt as subgrid control.                               |
 | Default Duration View     | Specifies default duration display.                               |
 | Default List`s Cell Width | Specifies cell width for list. Does not effect on duration width. |
 | Time Step                 | Specifies allowed step for move events. Sets in milliseconds.     |
