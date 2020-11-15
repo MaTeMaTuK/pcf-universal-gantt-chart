@@ -2,6 +2,7 @@ import * as React from "react";
 import { Task } from "gantt-task-react";
 
 export const creatTaskListLocal = (
+  includeTime: boolean,
   onClick: (task: Task) => void,
   formatDateShort: (value: Date, includeTime?: boolean) => string
 ): React.FC<{
@@ -24,7 +25,6 @@ export const creatTaskListLocal = (
     selectedTaskId,
     setSelectedTask,
   }) => {
-    debugger;
     return (
       <div
         className="Gantt-Task-List_Wrapper"
@@ -85,9 +85,9 @@ export const creatTaskListLocal = (
                     setSelectedTask(t.id);
                   }
                 }}
-                title={formatDateShort(t.start, true)}
+                title={formatDateShort(t.start, includeTime)}
               >
-                &nbsp;{formatDateShort(t.start, true)}
+                &nbsp;{formatDateShort(t.start, includeTime)}
               </div>
               {/**
                * End Time
@@ -105,9 +105,9 @@ export const creatTaskListLocal = (
                     setSelectedTask(t.id);
                   }
                 }}
-                title={formatDateShort(t.end, true)}
+                title={formatDateShort(t.end, includeTime)}
               >
-                &nbsp;{formatDateShort(t.end, true)}
+                &nbsp;{formatDateShort(t.end, includeTime)}
               </div>
             </div>
           );

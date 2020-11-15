@@ -19,6 +19,8 @@ export type UniversalGanttProps = {
   context: ComponentFramework.Context<IInputs>;
   tasks: Task[];
   ganttHeight?: number;
+  rowHeight: number;
+  headerHeight: number;
   recordDisplayName: string;
   startDisplayName: string;
   endDisplayName: string;
@@ -27,6 +29,7 @@ export type UniversalGanttProps = {
   startFieldName: string;
   endFieldName: string;
   progressFieldName: string;
+  includeTime: boolean;
   isProgressing: boolean;
   crmUserTimeOffset: number;
   onViewChange: (viewMode: ViewMode) => void;
@@ -138,8 +141,8 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   let options: StylingOption & EventOption = {
     fontSize: "14px",
     fontFamily: "SegoeUI, Segoe UI",
-    headerHeight: 50,
-    rowHeight: 50,
+    headerHeight: props.headerHeight,
+    rowHeight: props.rowHeight,
     barCornerRadius: 0,
     listCellWidth: props.listCellWidth,
     TaskListHeader: createHeaderLocal(
@@ -153,9 +156,14 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
       props.progressDisplayName,
       context.resources.getString("Duration"),
       context.resources.getString("Duration_Metric"),
+      props.includeTime,
       formatDateShort
     ),
-    TaskListTable: creatTaskListLocal(handleOpenRecord, formatDateShort),
+    TaskListTable: creatTaskListLocal(
+      props.includeTime,
+      handleOpenRecord,
+      formatDateShort
+    ),
   };
 
   if (view === ViewMode.Month) {

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="GanttGridComponent" constructor="UniversalGanttChartComponent" version="0.0.2" display-name-key="Universal Gantt Chart Component" description-key="UniversalGanttChartComponent description" control-type="standard">
+  <control namespace="GanttGridComponent" constructor="UniversalGanttChartComponent" version="0.0.3" display-name-key="Universal Gantt Chart Component" description-key="Component shows tasks on a timeline. You can move them on the chart." control-type="standard">
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
-     <data-set name="entityDataSet" display-name-key="Entity-Grid" cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFind:true">
+    <data-set name="entityDataSet" display-name-key="Entity-Grid" cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFind:true">
       <property-set name="displayName" display-name-key="Record Display Name" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="bound" required="true" />
       <property-set name="scheduledStart" display-name-key="Start" description-key="Scheduled start date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
       <property-set name="scheduledEnd" display-name-key="End" description-key="Scheduled end date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
       <property-set name="progress" display-name-key="Progress" description-key="From 0 to 100. Whole Number" of-type="Whole.None" usage="bound" required="false" />
     </data-set>
 
-    <property name="isSubgrid" display-name-key="Is SubGrid" description-key="This flag is for views in subgrid only" of-type="Enum" usage="input" required="false" default-value="0">
+    <property name="isSubgrid" display-name-key="Is SubGrid" description-key="This flag is for views in subgrid only" of-type="Enum" usage="input" required="true" default-value="0">
       <value name="Yes" display-name-key="No">0</value>
       <value name="No" display-name-key="Yes">1</value>
     </property>
 
-    <property name="viewMode" display-name-key="Default Duration View" description-key=" " of-type="Enum" usage="input" required="false" default-value="Day">
+    <property name="viewMode" display-name-key="Default Duration View" description-key=" " of-type="Enum" usage="input" required="true" default-value="Day">
       <value name="quarter" display-name-key="Quarter of Day">Quarter Day</value>
       <value name="half" display-name-key="Half of Day">Half Day</value>
       <value name="day" display-name-key="Day">Day</value>
@@ -22,8 +22,15 @@
       <value name="Month" display-name-key="Month">Month</value>
     </property>
 
-    <property name="defaultListCellWidth" display-name-key="Default List`s Cell Width" description-key="Default Cell Width for List" of-type="Whole.None" usage="input" required="false" default-value="155"/>
-    <property name="timeStep" display-name-key="Time Step" description-key="Time step for task for drag event" of-type="Whole.None" usage="input" required="false" default-value="300000"/>
+    <property name="displayDateFormat" display-name-key="Display Date Format" description-key=" " of-type="Enum" usage="input" required="true" default-value="datetime">
+      <value name="dateAndTime" display-name-key="Date and Time">datetime</value>
+      <value name="date" display-name-key="Date">date</value>
+    </property>
+
+    <property name="listCellWidth" display-name-key="List`s Cell Width" description-key="Default cell width for list" of-type="Whole.None" usage="input" required="true" default-value="155"/>
+    <property name="headerHeight" display-name-key="Header Height" description-key="Default header height for gantt" of-type="Whole.None" usage="input" required="true" default-value="50"/>
+    <property name="rowHeight" display-name-key="Row Height" description-key="Default row height for gantt" of-type="Whole.None" usage="input" required="true" default-value="50"/>
+    <property name="timeStep" display-name-key="Time Step" description-key="Time step for task for drag event" of-type="Whole.None" usage="input" required="true" default-value="300000"/>
 
     <property name="backgroundColor" display-name-key="Background Color" description-key="Defines Bar background color" of-type="SingleLine.Text" usage="input" required="false"/>
     <property name="backgroundSelectedColor" display-name-key="Background Selected Color" description-key="Defines Bar background color on select" of-type="SingleLine.Text" usage="input" required="false"/>
@@ -36,7 +43,7 @@
       <css path="./components/css/gantt-footer.css" order="1"/>
       <css path="./components/css/task-list-table.css" order="1"/>
       <css path="./components/css/gantt-tooltip.css" order="2"/>
-       <css path="./components/css/universal-gantt.css" order="3"/>
+      <css path="./components/css/universal-gantt.css" order="3"/>
       <resx path="strings/UniversalGanttChartComponent.1033.resx" version="1.0.0" />
       <resx path="strings/UniversalGanttChartComponent.1031.resx" version="1.0.0" />
       <resx path="strings/UniversalGanttChartComponent.1053.resx" version="1.0.0" />

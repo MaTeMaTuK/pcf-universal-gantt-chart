@@ -7,6 +7,7 @@ export const createTooltip = (
   progressDisplayName: string,
   durationDisplayName: string,
   metricDisplayName: string,
+  includeTime: boolean,
   formatDateShort: (value: Date, includeTime?: boolean) => string
 ): React.FC<{
   task: Task;
@@ -31,11 +32,14 @@ export const createTooltip = (
 
         <p
           className={"Gantt-Tooltip_Paragraph"}
-        >{`${startDisplayName}: ${formatDateShort(task.start, true)}`}</p>
+        >{`${startDisplayName}: ${formatDateShort(
+          task.start,
+          includeTime
+        )}`}</p>
 
         <p
           className={"Gantt-Tooltip_Paragraph"}
-        >{`${endDisplayName}: ${formatDateShort(task.end, true)}`}</p>
+        >{`${endDisplayName}: ${formatDateShort(task.end, includeTime)}`}</p>
 
         <p className={"Gantt-Tooltip_Paragraph"}>{`${durationDisplayName}: ${~~(
           (task.end.getTime() - task.start.getTime()) /

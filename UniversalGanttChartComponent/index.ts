@@ -77,8 +77,8 @@ export class UniversalGanttChartComponent
         crmUserTimeOffset,
         !!progressField
       );
-      const listCellWidth = !!context.parameters.defaultListCellWidth.raw
-        ? `${context.parameters.defaultListCellWidth.raw}px`
+      const listCellWidth = !!context.parameters.listCellWidth.raw
+        ? `${context.parameters.listCellWidth.raw}px`
         : "";
 
       const progressFieldName = !!progressField ? progressField.name : "";
@@ -86,11 +86,19 @@ export class UniversalGanttChartComponent
         ? progressField.displayName
         : "";
 
+      const rowHeight = !!context.parameters.rowHeight.raw
+        ? context.parameters.rowHeight.raw
+        : 50;
+      const headerHeight = !!context.parameters.headerHeight.raw
+        ? context.parameters.headerHeight.raw
+        : 50;
+
       let ganttHeight: number | undefined;
       if (context.parameters.isSubgrid.raw === "0") {
         ganttHeight = this._container.offsetHeight - 150;
       }
-      debugger;
+      let includeTime = context.parameters.displayDateFormat.raw === "datetime";
+
       const gantt = React.createElement(UniversalGantt, {
         context,
         tasks,
@@ -104,9 +112,12 @@ export class UniversalGanttChartComponent
         progressFieldName: progressFieldName,
         listCellWidth: listCellWidth,
         timeStep: context.parameters.timeStep.raw,
+        rowHeight: rowHeight,
+        headerHeight: headerHeight,
         isProgressing: !!progressField,
         locale: this.locale,
         viewMode: this.viewMode,
+        includeTime: includeTime,
         crmUserTimeOffset,
         onViewChange: this.handleViewModeChange,
       });
