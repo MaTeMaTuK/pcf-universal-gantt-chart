@@ -5,7 +5,7 @@ export const creatTaskListLocal = (
   includeTime: boolean,
   onClick: (task: Task) => void,
   formatDateShort: (value: Date, includeTime?: boolean) => string
-): React.FC<{
+): React.FunctionComponent<{
   rowHeight: number;
   rowWidth: string;
   fontFamily: string;

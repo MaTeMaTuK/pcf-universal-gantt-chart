@@ -54,7 +54,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
 
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
-    debugger;
+
     try {
       await context.webAPI.updateRecord(entityName, task.id, {
         [props.endFieldName]: new Date(
@@ -96,15 +96,8 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     const recordRef = context.parameters.entityDataSet.records[
       task.id
     ].getNamedReference();
-    const entityName =
-      recordRef.etn || ((recordRef as any).logicalName as string);
 
-    const entityOptions: ComponentFramework.NavigationApi.EntityFormOptions = {
-      entityId: task.id,
-      entityName,
-      windowPosition: 1,
-    };
-    context.navigation.openForm(entityOptions);
+    context.parameters.entityDataSet.openDatasetItem(recordRef);
   };
 
   const handleSelect = (task: Task, isSelected: boolean) => {

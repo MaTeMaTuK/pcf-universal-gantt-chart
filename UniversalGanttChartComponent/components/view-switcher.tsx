@@ -2,7 +2,7 @@ import * as React from "react";
 import { ViewMode } from "gantt-task-react";
 import { IInputs } from "../generated/ManifestTypes";
 
-export const ViewSwitcher: React.SFC<{
+export const ViewSwitcher: React.FunctionComponent<{
   context: ComponentFramework.Context<IInputs>;
   onViewChange: (viewMode: ViewMode) => void;
 }> = ({ context, onViewChange }) => {

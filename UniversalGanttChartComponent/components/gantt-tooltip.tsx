@@ -9,7 +9,7 @@ export const createTooltip = (
   metricDisplayName: string,
   includeTime: boolean,
   formatDateShort: (value: Date, includeTime?: boolean) => string
-): React.FC<{
+): React.FunctionComponent<{
   task: Task;
   fontSize: string;
   fontFamily: string;

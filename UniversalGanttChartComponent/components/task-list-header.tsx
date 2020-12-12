@@ -4,7 +4,7 @@ export const createHeaderLocal = (
   recordDisplayName: string,
   startDisplayName: string,
   endDisplayName: string
-): React.FC<{
+): React.FunctionComponent<{
   headerHeight: number;
   rowWidth: string;
   fontFamily: string;
