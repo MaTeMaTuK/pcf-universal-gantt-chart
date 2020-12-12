@@ -4,14 +4,21 @@
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
     <data-set name="entityDataSet" display-name-key="Entity-Grid" cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFind:true">
       <property-set name="displayName" display-name-key="Record Display Name" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="bound" required="true" />
-      <property-set name="scheduledStart" display-name-key="Start" description-key="Scheduled start date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
-      <property-set name="scheduledEnd" display-name-key="End" description-key="Scheduled end date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
+      <property-set name="startTime" display-name-key="Start" description-key="Scheduled start date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
+      <property-set name="endTime" display-name-key="End" description-key="Scheduled end date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
       <property-set name="progress" display-name-key="Progress" description-key="From 0 to 100. Whole Number" of-type="Whole.None" usage="bound" required="false" />
+      <property-set name="displayColorOption" display-name-key="Display Color(Option)" description-key="Specifies record color by option value(hex code)" of-type="OptionSet" usage="bound" required="false" />
+      <property-set name="displayColorText" display-name-key="Display Color(Text)" description-key="Specifies record color by text value(hex code)" of-type="SingleLine.Text" usage="bound" required="false" />
     </data-set>
 
-    <property name="isSubgrid" display-name-key="Is SubGrid" description-key="This flag is for views in subgrid only" of-type="Enum" usage="input" required="true" default-value="0">
-      <value name="Yes" display-name-key="No">0</value>
-      <value name="No" display-name-key="Yes">1</value>
+    <property name="displayMode" display-name-key="Display Mode" description-key="Parameter enables or disables progress and datetime controls" of-type="Enum" usage="input" required="true" default-value="editable">
+      <value name="editable" display-name-key="Editable">editable</value>
+      <value name="readonly" display-name-key="Read Only">readonly</value>
+    </property>
+
+    <property name="isSubgrid" display-name-key="Is SubGrid" description-key="This flag is for views in subgrid only" of-type="Enum" usage="input" required="true" default-value="no">
+      <value name="no" display-name-key="No">no</value>
+      <value name="yes" display-name-key="Yes">yes</value>
     </property>
 
     <property name="viewMode" display-name-key="Default Duration View" description-key=" " of-type="Enum" usage="input" required="true" default-value="Day">
@@ -19,23 +26,35 @@
       <value name="half" display-name-key="Half of Day">Half Day</value>
       <value name="day" display-name-key="Day">Day</value>
       <value name="week" display-name-key="Week">Week</value>
-      <value name="Month" display-name-key="Month">Month</value>
+      <value name="month" display-name-key="Month">Month</value>
     </property>
 
     <property name="displayDateFormat" display-name-key="Display Date Format" description-key=" " of-type="Enum" usage="input" required="true" default-value="datetime">
-      <value name="dateAndTime" display-name-key="Date and Time">datetime</value>
+      <value name="datetime" display-name-key="Date and Time">datetime</value>
       <value name="date" display-name-key="Date">date</value>
     </property>
 
-    <property name="listCellWidth" display-name-key="List`s Cell Width" description-key="Default cell width for list" of-type="Whole.None" usage="input" required="true" default-value="155"/>
-    <property name="headerHeight" display-name-key="Header Height" description-key="Default header height for gantt" of-type="Whole.None" usage="input" required="true" default-value="50"/>
-    <property name="rowHeight" display-name-key="Row Height" description-key="Default row height for gantt" of-type="Whole.None" usage="input" required="true" default-value="50"/>
     <property name="timeStep" display-name-key="Time Step" description-key="Time step for task for drag event" of-type="Whole.None" usage="input" required="true" default-value="300000"/>
+    <property name="fontSize" display-name-key="Font Size" description-key="Defines chart font size. Works with css style values" of-type="SingleLine.Text" usage="input" required="true" default-value="14px"/>
 
-    <property name="backgroundColor" display-name-key="Background Color" description-key="Defines Bar background color" of-type="SingleLine.Text" usage="input" required="false"/>
-    <property name="backgroundSelectedColor" display-name-key="Background Selected Color" description-key="Defines Bar background color on select" of-type="SingleLine.Text" usage="input" required="false"/>
-    <property name="progressColor" display-name-key="Progress Color" description-key="Defines Bar progress color" of-type="SingleLine.Text" usage="input" required="false"/>
-    <property name="progressSelectedColor" display-name-key="Progress Selected Color" description-key="Defines Bar progress color on select" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="headerHeight" display-name-key="Header Height" description-key="Default header height for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="50"/>
+    <property name="rowHeight" display-name-key="Row Height" description-key="Default row height for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="50"/>
+    <property name="listCellWidth" display-name-key="List`s Cell Width" description-key="Default cell width for list. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="155"/>
+    <property name="columnWidthQuarter" display-name-key="Сolumn Width for Quarter of Day" description-key="Default column width for quarter of day view for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="60"/>
+    <property name="columnWidthHalf" display-name-key="Сolumn Width for Half of Day" description-key="Default column width for half of day view for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="60"/>
+    <property name="columnWidthDay" display-name-key="Сolumn Width for Day" description-key="Default column width for day view for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="60"/>
+    <property name="columnWidthWeek" display-name-key="Сolumn Width for Week" description-key="Default column width for week view for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="250"/>
+    <property name="columnWidthMonth" display-name-key="Сolumn Width for Month" description-key="Default column width for month view for gantt. Unit of the measure is a pixel" of-type="Whole.None" usage="input" required="true" default-value="300"/>
+
+    <property name="customHeaderDisplayName" display-name-key="Custom Display Name" description-key="Defines display header name text" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="customHeaderStartName" display-name-key="Custom Start Name" description-key="Defines display header start time text" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="customHeaderEndName" display-name-key="Custom End Name" description-key="Defines display header end time text" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="customHeaderProgressName" display-name-key="Custom Progress Name" description-key="Defines header display progress text" of-type="SingleLine.Text" usage="input" required="false"/>
+
+    <property name="customBackgroundColor" display-name-key="Custom Background Color" description-key="Defines Bar background color" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="customBackgroundSelectedColor" display-name-key="Custom Background Selected Color" description-key="Defines Bar background color on select" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="customProgressColor" display-name-key="Custom Progress Color" description-key="Defines Bar progress color" of-type="SingleLine.Text" usage="input" required="false"/>
+    <property name="customProgressSelectedColor" display-name-key="Custom Progress Selected Color" description-key="Defines Bar progress color on select" of-type="SingleLine.Text" usage="input" required="false"/>
     <resources>
       <code path="index.ts" order="1"/>
       <css path="../node_modules/gantt-task-react/dist/index.css" order="1" />

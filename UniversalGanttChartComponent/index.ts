@@ -1,4 +1,5 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
+import { Xrm } from "./xrm";
 import DataSetInterfaces = ComponentFramework.PropertyHelper.DataSetApi;
 import * as ReactDOM from "react-dom";
 import * as React from "react";
@@ -10,12 +11,15 @@ type DataSet = ComponentFramework.PropertyTypes.DataSet;
 export class UniversalGanttChartComponent
   implements ComponentFramework.StandardControl<IInputs, IOutputs> {
   private _container: HTMLDivElement;
-  private displayNameStr = "displayName";
-  private scheduledStartStr = "scheduledStart";
-  private scheduledEndStr = "scheduledEnd";
-  private progressStr = "progress";
-  private viewMode: ViewMode;
-  private locale: string;
+  private _displayNameStr = "displayName";
+  private _scheduledStartStr = "startTime";
+  private _scheduledEndStr = "endTime";
+  private _progressStr = "progress";
+  private _displayColorText = "displayColorText";
+  private _displayColorOption = "displayColorOption";
+  private _viewMode: ViewMode;
+  private _crmUserTimeOffset: number;
+  private _dataSet: DataSet;
 
   constructor() {
     this.handleViewModeChange = this.handleViewModeChange.bind(this);
@@ -30,7 +34,10 @@ export class UniversalGanttChartComponent
     // Need to track container resize so that control could get the available width. The available height won't be provided even this is true
     context.mode.trackContainerResize(true);
     this._container = container;
-    this.viewMode = <ViewMode>context.parameters.viewMode.raw;
+    this._viewMode = <ViewMode>context.parameters.viewMode.raw;
+    this._crmUserTimeOffset =
+      context.userSettings.getTimeZoneOffsetMinutes(new Date()) +
+      new Date().getTimezoneOffset();
   }
 
   public updateView(context: ComponentFramework.Context<IInputs>): void {
@@ -41,16 +48,13 @@ export class UniversalGanttChartComponent
    * Async wrapper for update view method
    */
   private async updateViewAsync(context: ComponentFramework.Context<IInputs>) {
-    const dataset = context.parameters.entityDataSet;
-    const columns = dataset.columns;
-    const nameField = columns.find((c) => c.alias === this.displayNameStr);
-    const startField = columns.find((c) => c.alias === this.scheduledStartStr);
-    const endField = columns.find((c) => c.alias === this.scheduledEndStr);
-    const progressField = columns.find((c) => c.alias === this.progressStr);
-    const crmUserTimeOffset =
-      context.userSettings.getTimeZoneOffsetMinutes(new Date()) +
-      new Date().getTimezoneOffset();
-
+    this._dataSet = context.parameters.entityDataSet;
+    //Columns retrieve
+    const columns = this._dataSet.columns;
+    const nameField = columns.find((c) => c.alias === this._displayNameStr);
+    const startField = columns.find((c) => c.alias === this._scheduledStartStr);
+    const endField = columns.find((c) => c.alias === this._scheduledEndStr);
+    const progressField = columns.find((c) => c.alias === this._progressStr);
     if (
       !nameField ||
       !startField ||
@@ -60,32 +64,27 @@ export class UniversalGanttChartComponent
       return;
 
     try {
-      const crmLanguageCode = context.userSettings.languageId;
-      const response = await context.webAPI.retrieveMultipleRecords(
-        "languagelocale",
-        `?$top=1&$select=code&$filter=localeid%20eq%20${crmLanguageCode}`
-      );
-      if (response.entities.length > 0 && !this.locale) {
-        this.locale = response.entities[0]["code"];
-      } else if (!this.locale) {
-        this.locale = "en";
-      }
-
       const tasks = await this.generateTasks(
         context,
-        dataset,
-        crmUserTimeOffset,
+        this._dataSet,
         !!progressField
       );
       const listCellWidth = !!context.parameters.listCellWidth.raw
         ? `${context.parameters.listCellWidth.raw}px`
         : "";
-
+      //header display names
+      const recordDisplayName =
+        context.parameters.customHeaderDisplayName.raw || nameField.displayName;
+      const startDisplayName =
+        context.parameters.customHeaderStartName.raw || startField.displayName;
+      const endDisplayName =
+        context.parameters.customHeaderEndName.raw || endField.displayName;
       const progressFieldName = !!progressField ? progressField.name : "";
-      const progressDisplayName = !!progressField
-        ? progressField.displayName
-        : "";
+      const progressDisplayName =
+        context.parameters.customHeaderProgressName.raw ||
+        (!!progressField ? progressField.displayName : "");
 
+      //height setup
       const rowHeight = !!context.parameters.rowHeight.raw
         ? context.parameters.rowHeight.raw
         : 50;
@@ -94,19 +93,33 @@ export class UniversalGanttChartComponent
         : 50;
 
       let ganttHeight: number | undefined;
-      if (context.parameters.isSubgrid.raw === "0") {
-        ganttHeight = this._container.offsetHeight - 150;
+      if (context.mode.allocatedHeight !== -1) {
+        ganttHeight = context.mode.allocatedHeight - 85;
+      } else if (context.parameters.isSubgrid.raw === "no") {
+        ganttHeight = this._container.offsetHeight - 145;
       }
-      let includeTime = context.parameters.displayDateFormat.raw === "datetime";
 
+      //width setup
+      const columnWidthQuarter = context.parameters.columnWidthQuarter.raw || 0;
+      const columnWidthHalf = context.parameters.columnWidthHalf.raw || 0;
+      const columnWidthDay = context.parameters.columnWidthDay.raw || 0;
+      const columnWidthWeek = context.parameters.columnWidthWeek.raw || 0;
+      const columnWidthMonth = context.parameters.columnWidthMonth.raw || 0;
+
+      const includeTime =
+        context.parameters.displayDateFormat.raw === "datetime";
+
+      const fontSize = context.parameters.fontSize.raw || "14px";
+
+      //create gantt
       const gantt = React.createElement(UniversalGantt, {
         context,
         tasks,
-        ganttHeight: ganttHeight,
-        recordDisplayName: nameField.displayName,
-        startDisplayName: startField.displayName,
-        endDisplayName: endField.displayName,
-        progressDisplayName: progressDisplayName,
+        ganttHeight,
+        recordDisplayName,
+        startDisplayName,
+        endDisplayName,
+        progressDisplayName,
         startFieldName: startField.name,
         endFieldName: endField.name,
         progressFieldName: progressFieldName,
@@ -115,10 +128,15 @@ export class UniversalGanttChartComponent
         rowHeight: rowHeight,
         headerHeight: headerHeight,
         isProgressing: !!progressField,
-        locale: this.locale,
-        viewMode: this.viewMode,
+        viewMode: this._viewMode,
         includeTime: includeTime,
-        crmUserTimeOffset,
+        crmUserTimeOffset: this._crmUserTimeOffset,
+        fontSize,
+        columnWidthQuarter,
+        columnWidthHalf,
+        columnWidthDay,
+        columnWidthWeek,
+        columnWidthMonth,
         onViewChange: this.handleViewModeChange,
       });
 
@@ -131,7 +149,6 @@ export class UniversalGanttChartComponent
   private async generateTasks(
     context: ComponentFramework.Context<IInputs>,
     dataset: ComponentFramework.PropertyTypes.DataSet,
-    crmUserTimeOffset: number,
     isProgressing: boolean
   ) {
     let entityTypesAndColors: {
@@ -141,16 +158,22 @@ export class UniversalGanttChartComponent
       progressColor: string;
       progressSelectedColor: string;
     }[] = [];
+    const isDisabled = context.parameters.displayMode.raw === "readonly";
     let tasks: Task[] = [];
-
     for (const recordId of dataset.sortedRecordIds) {
       const record = dataset.records[recordId];
-      const name = <string>record.getValue(this.displayNameStr);
-      const start = <string>record.getValue(this.scheduledStartStr);
-      const end = <string>record.getValue(this.scheduledEndStr);
+      const name = <string>record.getValue(this._displayNameStr);
+      const start = <string>record.getValue(this._scheduledStartStr);
+      const end = <string>record.getValue(this._scheduledEndStr);
       const progress = isProgressing
-        ? Number(record.getValue(this.progressStr))
+        ? Number(record.getValue(this._progressStr))
         : 0;
+      const colorText = <string>record.getValue(this._displayColorText);
+      const optionValue = <string>record.getValue(this._displayColorOption);
+      const optionColum = dataset.columns.find(
+        (c) => c.alias == this._displayColorOption
+      );
+      const optionLogicalName = !!optionColum ? optionColum.name : "";
 
       const entRef = record.getNamedReference();
       const entName = entRef.etn || <string>(<any>entRef).logicalName;
@@ -159,8 +182,14 @@ export class UniversalGanttChartComponent
         (e) => e.entityLogicalName === entName
       );
 
-      if (!entityColorTheme) {
-        entityColorTheme = await this.generateColorTheme(context, entName);
+      if (!entityColorTheme || colorText || optionLogicalName) {
+        entityColorTheme = await this.generateColorTheme(
+          context,
+          entName,
+          colorText,
+          optionValue,
+          optionLogicalName
+        );
         entityTypesAndColors.push(entityColorTheme);
       }
 
@@ -168,9 +197,14 @@ export class UniversalGanttChartComponent
       tasks.push({
         id: record.getRecordId(),
         name,
-        start: new Date(new Date(start).getTime() + crmUserTimeOffset * 60000),
-        end: new Date(new Date(end).getTime() + crmUserTimeOffset * 60000),
+        start: new Date(
+          new Date(start).getTime() + this._crmUserTimeOffset * 60000
+        ),
+        end: new Date(
+          new Date(end).getTime() + this._crmUserTimeOffset * 60000
+        ),
         progress: progress,
+        isDisabled: isDisabled,
         styles: { ...entityColorTheme },
       });
     }
@@ -179,19 +213,47 @@ export class UniversalGanttChartComponent
 
   private async generateColorTheme(
     context: ComponentFramework.Context<IInputs>,
-    entName: string
+    entName: string,
+    colorText: string,
+    optionValue: string,
+    optionLogicalName: string
   ) {
-    const result = await context.utils.getEntityMetadata(entName, [
-      "EntityColor",
-    ]);
-    const entityColor = result["EntityColor"];
+    let entityColor = "#2975B2";
+    //Model App
+    if (context.mode.allocatedHeight === -1 && !colorText) {
+      if (optionValue) {
+        //Get by OptionSet Color
+        const result = await context.utils.getEntityMetadata(entName, [
+          optionLogicalName,
+        ]);
+        const attributes: Xrm.EntityMetadata.AttributesCollection =
+          result["Attributes"];
+        const optionMetadata = attributes.getByName(optionLogicalName);
+        entityColor =
+          optionMetadata.attributeDescriptor.OptionSet.find(
+            (o) => o.Value === +optionValue
+          )?.Color || entityColor;
+      } else {
+        //Get by Entity Color
+        const result = await context.utils.getEntityMetadata(entName, [
+          "EntityColor",
+        ]);
+        entityColor = result["EntityColor"];
+      }
+    } else if (colorText) {
+      //Get by Text Color
+      entityColor = colorText;
+    }
+
     const colors = generate(entityColor);
-    const backgroundColor = context.parameters.backgroundColor.raw || colors[2];
+    const backgroundColor =
+      context.parameters.customBackgroundColor.raw || colors[2];
     const backgroundSelectedColor =
-      context.parameters.backgroundSelectedColor.raw || colors[3];
-    const progressColor = context.parameters.progressColor.raw || colors[4];
+      context.parameters.customBackgroundSelectedColor.raw || colors[3];
+    const progressColor =
+      context.parameters.customProgressColor.raw || colors[4];
     const progressSelectedColor =
-      context.parameters.progressSelectedColor.raw || colors[5];
+      context.parameters.customProgressSelectedColor.raw || colors[5];
 
     return {
       entityLogicalName: entName,
@@ -203,7 +265,7 @@ export class UniversalGanttChartComponent
   }
 
   private handleViewModeChange(viewMode: ViewMode) {
-    this.viewMode = viewMode;
+    this._viewMode = viewMode;
   }
 
   /**

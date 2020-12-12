@@ -59,7 +59,7 @@ export const creatTaskListLocal = (
                * Name
                */}
               <div
-                className="Gantt-Task-List_Cell Gantt-Task-List_Cell__Link"
+                className="Gantt-Task-List_Cell"
                 style={{
                   minWidth: rowWidth,
                   maxWidth: rowWidth,
@@ -67,7 +67,8 @@ export const creatTaskListLocal = (
                 onClick={() => onClick(t)}
                 title={t.name}
               >
-                &nbsp;{t.name}
+                &nbsp;
+                <span className="Gantt-Task-List_Cell__Link">{t.name}</span>
               </div>
               {/**
                * Start Time

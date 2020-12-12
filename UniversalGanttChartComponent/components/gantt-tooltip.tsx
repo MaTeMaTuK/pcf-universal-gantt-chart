@@ -25,13 +25,14 @@ export const createTooltip = (
           className={
             "Gantt-Tooltip_Paragraph Gantt-Tooltip_Paragraph__Information"
           }
-          style={{ fontSize: fontSize + 6 }}
+          style={{ fontSize: fontSize }}
         >
           {task.name}
         </p>
 
         <p
           className={"Gantt-Tooltip_Paragraph"}
+          style={{ fontSize: fontSize }}
         >{`${startDisplayName}: ${formatDateShort(
           task.start,
           includeTime
@@ -39,14 +40,18 @@ export const createTooltip = (
 
         <p
           className={"Gantt-Tooltip_Paragraph"}
+          style={{ fontSize: fontSize }}
         >{`${endDisplayName}: ${formatDateShort(task.end, includeTime)}`}</p>
 
-        <p className={"Gantt-Tooltip_Paragraph"}>{`${durationDisplayName}: ${~~(
+        <p
+          className={"Gantt-Tooltip_Paragraph"}
+          style={{ fontSize: fontSize }}
+        >{`${durationDisplayName}: ${~~(
           (task.end.getTime() - task.start.getTime()) /
           (1000 * 60 * 60 * 24)
         )} ${metricDisplayName}`}</p>
 
-        <p className={"Gantt-Tooltip_Paragraph"}>
+        <p className={"Gantt-Tooltip_Paragraph"} style={{ fontSize: fontSize }}>
           {!!task.progress && `${progressDisplayName}: ${task.progress} %`}
         </p>
       </div>

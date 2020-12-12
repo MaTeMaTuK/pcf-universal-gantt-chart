@@ -18,20 +18,26 @@ import { creatTaskListLocal } from "./task-list-table";
 export type UniversalGanttProps = {
   context: ComponentFramework.Context<IInputs>;
   tasks: Task[];
-  ganttHeight?: number;
-  rowHeight: number;
-  headerHeight: number;
   recordDisplayName: string;
   startDisplayName: string;
   endDisplayName: string;
   progressDisplayName: string;
-  listCellWidth: string;
   startFieldName: string;
   endFieldName: string;
   progressFieldName: string;
   includeTime: boolean;
   isProgressing: boolean;
   crmUserTimeOffset: number;
+  fontSize: string;
+  ganttHeight?: number;
+  rowHeight: number;
+  headerHeight: number;
+  listCellWidth: string;
+  columnWidthQuarter: number;
+  columnWidthHalf: number;
+  columnWidthDay: number;
+  columnWidthWeek: number;
+  columnWidthMonth: number;
   onViewChange: (viewMode: ViewMode) => void;
 } & EventOption &
   DisplayOption;
@@ -48,7 +54,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
 
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
-
+    debugger;
     try {
       await context.webAPI.updateRecord(entityName, task.id, {
         [props.endFieldName]: new Date(
@@ -86,30 +92,6 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     return true;
   };
 
-  const handleTaskDelete = async (task: Task) => {
-    var confirm = await context.navigation.openConfirmDialog({
-      text: context.resources.getString("Confirm"),
-    });
-    if (!confirm.confirmed) {
-      return false;
-    }
-
-    const recordRef = context.parameters.entityDataSet.records[
-      task.id
-    ].getNamedReference();
-    const entityName =
-      recordRef.etn || ((recordRef as any).logicalName as string);
-
-    try {
-      await context.webAPI.deleteRecord(entityName, task.id);
-    } catch (e) {
-      context.navigation.openErrorDialog(e);
-      context.parameters.entityDataSet.refresh();
-      return false;
-    }
-    return true;
-  };
-
   const handleOpenRecord = async (task: Task) => {
     const recordRef = context.parameters.entityDataSet.records[
       task.id
@@ -139,7 +121,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   };
 
   let options: StylingOption & EventOption = {
-    fontSize: "14px",
+    fontSize: props.fontSize,
     fontFamily: "SegoeUI, Segoe UI",
     headerHeight: props.headerHeight,
     rowHeight: props.rowHeight,
@@ -166,10 +148,21 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     ),
   };
 
-  if (view === ViewMode.Month) {
-    options.columnWidth = 300;
-  } else if (view === ViewMode.Week) {
-    options.columnWidth = 250;
+  switch (view) {
+    case ViewMode.Month:
+      options.columnWidth = props.columnWidthMonth;
+      break;
+    case ViewMode.Week:
+      options.columnWidth = props.columnWidthWeek;
+      break;
+    case ViewMode.Day:
+      options.columnWidth = props.columnWidthDay;
+      break;
+    case ViewMode.HalfDay:
+      options.columnWidth = props.columnWidthHalf;
+      break;
+    default:
+      options.columnWidth = props.columnWidthQuarter;
   }
 
   if (props.isProgressing) {
@@ -191,7 +184,6 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
         viewMode={view}
         onDoubleClick={handleOpenRecord}
         onDateChange={handleDateChange}
-        onTaskDelete={handleTaskDelete}
         onSelect={handleSelect}
       />
       <GanttFooter context={context} currentRecordsCount={props.tasks.length} />
