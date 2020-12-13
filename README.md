@@ -49,6 +49,9 @@ Guide with details for canvas app is [here](/Canvas%20Guide.md)
 
 You are able to setup record coloring on base color or custom colors.
 The base color gets from option set, text value or entity color. You can create base color for record palette [here](https://ant.design/docs/spec/colors#Palette-Generation-Tool).
+
+Gantt takes from palette color #2 for background, #3 for selected background, #4 for progress color, #5 for selected progress color
+
 Custom colors might be configured for overriding if you don't like color generation.
 
 ## Additional information
