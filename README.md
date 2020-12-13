@@ -6,7 +6,7 @@
 
 ## Instruction
 
-Quick guide for model driven app [here](./Model Driven Guide.md)
+Quick guide for model driven app is [here](/Model Driven Guide.md)
 
 ## Configuration
 
