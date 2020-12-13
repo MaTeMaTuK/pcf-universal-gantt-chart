@@ -11,7 +11,7 @@ type DataSet = ComponentFramework.PropertyTypes.DataSet;
 export class UniversalGanttChartComponent
   implements ComponentFramework.StandardControl<IInputs, IOutputs> {
   private _container: HTMLDivElement;
-  private _displayNameStr = "displayName";
+  private _displayNameStr = "title";
   private _scheduledStartStr = "startTime";
   private _scheduledEndStr = "endTime";
   private _progressStr = "progress";

@@ -3,7 +3,7 @@
   <control namespace="GanttGridComponent" constructor="UniversalGanttChartComponent" version="0.1.3" display-name-key="Universal Gantt Chart Component" description-key="Component shows tasks on a timeline. You can move them on the chart." control-type="standard">
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
     <data-set name="entityDataSet" display-name-key="Entity-Grid" cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFind:true">
-      <property-set name="displayName" display-name-key="Record Display Name" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="bound" required="true" />
+      <property-set name="title" display-name-key="Title" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="bound" required="true" />
       <property-set name="startTime" display-name-key="Start" description-key="Scheduled start date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
       <property-set name="endTime" display-name-key="End" description-key="Scheduled end date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
       <property-set name="progress" display-name-key="Progress" description-key="From 0 to 100. Whole Number" of-type="Whole.None" usage="bound" required="false" />
