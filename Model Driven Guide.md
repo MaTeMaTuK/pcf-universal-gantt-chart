@@ -1,1 +1,3 @@
-![example](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/blob/master/DocumentationAssets/ganttStandartInstall.png)
+## Quick guide for model driven
+
+![example](./ganttStandardInstall.png)

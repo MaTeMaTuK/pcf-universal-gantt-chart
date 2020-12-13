@@ -2,11 +2,12 @@
 
 ## Interactive PCF Gantt Chart Control for Dynamics Grid and Canvas App
 
-![example](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/blob/master/DocumentationAssets/ganttStandart.gif)
+![example](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/blob/master/DocumentationAssets/ganttStandard.gif)
 
 ## Instruction
 
 Quick guide for model driven app is [here](/Model%20Driven%20Guide.md)
+Guide with details for canvas app is [here](/Canvas%20Guide.md)
 
 ## Configuration
 
