@@ -7,6 +7,7 @@
 ## Instruction
 
 Quick guide for model driven app is [here](/Model%20Driven%20Guide.md)
+
 Guide with details for canvas app is [here](/Canvas%20Guide.md)
 
 ## Configuration
