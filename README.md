@@ -14,7 +14,7 @@ Guide with details for canvas app is [here](/Canvas%20Guide.md)
 
 | Parameter Name                                  | Description                                                     |
 | :---------------------------------------------- | :-------------------------------------------------------------- |
-| Record Display Name\*                           | Specifies name on bar and list table.                           |
+| Title\*                           | Specifies name on bar and list table.                           |
 | Start Time\*                                    | Specifies start time display.                                   |
 | End Time\*                                      | Specifies end time display.                                     |
 | Progress                                        | Specifies progress display.                                     |
