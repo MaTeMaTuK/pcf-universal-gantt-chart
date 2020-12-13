@@ -4,9 +4,11 @@
 
 ![example](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/blob/master/DocumentationAssets/ganttStandart.gif)
 
-## Configuration
+## Instruction
 
-![example](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/blob/master/DocumentationAssets/ganttStandartInstall.png)
+Quick guide for model driven app [here](./Model Driven Guide.md)
+
+## Configuration
 
 | Parameter Name                                  | Description                                                     |
 | :---------------------------------------------- | :-------------------------------------------------------------- |
@@ -47,11 +49,9 @@ You are able to setup record coloring on base color or custom colors.
 The base color gets from option set, text value or entity color. You can create base color for record palette [here](https://ant.design/docs/spec/colors#Palette-Generation-Tool).
 Custom colors might be configured for overriding if you don't like color generation.
 
-You able to setup color by base color.
+## Additional information
 
 If you need your language you may contact with me or open an issue, where you may share your translations.
-
-## Additional information
 
 #### License GPLv3
 
