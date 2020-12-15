@@ -55,5 +55,6 @@ Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/com
 
 Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started.
 
-In this example I use Excel data source. [Test file](./DocumentationAssets/TasksList.xlsx)
+In this example I use Excel data source. [Test file](./DocumentationAssets/TasksList.xlsx?raw=true)
+
 ![example](./DocumentationAssets/ganttCanvasWithCStep0.png)
