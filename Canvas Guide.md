@@ -44,9 +44,16 @@
 Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started.
 
 1. Go to the Properties tab. Select entity in Entity-Grid(Items) and View
-2. Select necessary fields in Fields
+2. Select necessary fields
    ![example](./DocumentationAssets/ganttCanvasWithDStep1.png)
+3. Go to the Advanced tab
+4. Change _displayMode_ to readonly
+5. Setup _title_, _startTime_, _endTime_. Now this is working as Entity.EntityField
+   ![example](./DocumentationAssets/ganttCanvasWithDStep5.png)
 
 ## How to use gantt with custom collection
 
 Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started.
+
+In this example I use Excel data source. [Test file](./DocumentationAssets/TasksList.xlsx)
+![example](./DocumentationAssets/ganttCanvasWithCStep0.png)
