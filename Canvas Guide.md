@@ -2,6 +2,8 @@
 
 ## Configuration
 
+Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started
+
 | Parameter Name                                  | Name in canvas app designer   | Options                               |
 | :---------------------------------------------- | :---------------------------- | ------------------------------------- |
 | Title\*                                         | title                         |
@@ -34,5 +36,9 @@
 | Custom Background Selected Color                | customProgressSelectedColor   |
 
 \*Required
+
 \*\* Works in "readonly" mode only
+
 \*\*\* This params are for model driven only
+
+## How to use gantt with Dynamics 365 data source

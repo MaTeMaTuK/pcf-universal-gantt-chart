@@ -18,3 +18,5 @@
 Ready 🙂
 
 Gantt retrieves display fields names automatically.
+
+Ask me you can [here](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/issues) or you can find my contact information [here](https://github.com/MaTeMaTuK)
