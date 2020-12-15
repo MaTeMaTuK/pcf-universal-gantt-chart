@@ -66,6 +66,6 @@ In this example I use Excel data source. [Test file](./DocumentationAssets/Tasks
 2. Go to the Advanced tab
 3. Change _displayMode_ to readonly
 4. Setup _title_, _startTime_, _endTime_ and other fields. Now this is working as Source.Field
-   ![example](./DocumentationAssets/ganttCanvasWithDStep4.png)
+   ![example](./DocumentationAssets/ganttCanvasWithCStep4.png)
 5. Setup display fields naming. There are _customHeaderDisplayName_, _customHeaderStartName_, _customHeaderStartName_, _customHeaderEndName_, _customHeaderProgressName_
-   ![example](./DocumentationAssets/ganttCanvasWithDStep5.png)
+   ![example](./DocumentationAssets/ganttCanvasWithCStep5.png)
