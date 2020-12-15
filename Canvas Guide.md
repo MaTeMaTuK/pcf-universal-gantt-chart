@@ -2,8 +2,6 @@
 
 ## Configuration
 
-Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started
-
 | Parameter Name                                  | Name in canvas app designer   | Options                               |
 | :---------------------------------------------- | :---------------------------- | ------------------------------------- |
 | Title\*                                         | title                         |
@@ -42,3 +40,13 @@ Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/com
 \*\*\* This params are for model driven only
 
 ## How to use gantt with Dynamics 365 data source
+
+Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started.
+
+1. Go to the Properties tab. Select entity in Entity-Grid(Items) and View
+2. Select necessary fields in Fields
+   ![example](./DocumentationAssets/ganttCanvasWithDStep1.png)
+
+## How to use gantt with custom collection
+
+Please use [this guide](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/component-framework-for-canvas-apps) before you have been started.
