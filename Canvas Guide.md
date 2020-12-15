@@ -1,5 +1,8 @@
 # Guide for canvas app
 
+- [How to use gantt with Dynamics 365 data source](/Canvas%20Guide.md#how-to-use-gantt-with-dynamics-365-data-source)
+- [How to use gantt with custom collection](/Canvas%20Guide.md#how-to-use-gantt-with-custom-collection)
+
 ## Configuration
 
 | Parameter Name                                  | Name in canvas app designer   | Options                               |
