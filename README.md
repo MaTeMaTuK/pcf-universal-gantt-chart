@@ -6,7 +6,7 @@
 
 ## Instruction
 
-The solution is [here](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/releases)
+The solution is [here](https://github.com/MaTeMaTuK/pcf-universal-gantt-chart/releases) in assets
 
 Quick guide for model driven app is [here](/Model%20Driven%20Guide.md)
 
