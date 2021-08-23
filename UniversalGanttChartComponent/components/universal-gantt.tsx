@@ -9,7 +9,6 @@ import {
   DisplayOption,
 } from "gantt-task-react";
 import { createHeaderLocal } from "./task-list-header";
-import { GanttFooter } from "./gantt-footer";
 import { ViewSwitcher } from "./view-switcher";
 import { IInputs } from "../generated/ManifestTypes";
 import { createTooltip } from "./gantt-tooltip";
@@ -18,6 +17,7 @@ import { creatTaskListLocal } from "./task-list-table";
 export type UniversalGanttProps = {
   context: ComponentFramework.Context<IInputs>;
   tasks: Task[];
+  locale: string;
   recordDisplayName: string;
   startDisplayName: string;
   endDisplayName: string;
@@ -39,22 +39,22 @@ export type UniversalGanttProps = {
   columnWidthWeek: number;
   columnWidthMonth: number;
   onViewChange: (viewMode: ViewMode) => void;
+  onExpanderStateChange: (itemId: string, expanderState: boolean) => void;
+  setUpdateEvent: (updateEvent: boolean) => void;
 } & EventOption &
   DisplayOption;
 export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   props
 ) => {
   const [view, setView] = React.useState(props.viewMode);
-  const context = props.context;
+  const { context, setUpdateEvent } = props;
   // Events
   const handleDateChange = async (task: Task) => {
-    const recordRef = context.parameters.entityDataSet.records[
-      task.id
-    ].getNamedReference();
-
+    const recordRef =
+      context.parameters.entityDataSet.records[task.id].getNamedReference();
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
-
+    let resultState = true;
     try {
       await context.webAPI.updateRecord(entityName, task.id, {
         [props.endFieldName]: new Date(
@@ -66,37 +66,33 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
       });
     } catch (e) {
       context.navigation.openErrorDialog(e);
-      context.parameters.entityDataSet.refresh();
-      return false;
+      resultState = false;
     }
-    return true;
+    context.parameters.entityDataSet.refresh();
+    return resultState;
   };
 
   const handleProgressChange = async (task: Task) => {
-    const recordRef = context.parameters.entityDataSet.records[
-      task.id
-    ].getNamedReference();
-
+    const recordRef =
+      context.parameters.entityDataSet.records[task.id].getNamedReference();
     const entityName =
       recordRef.etn || ((recordRef as any).logicalName as string);
-
+    let resultState = true;
     try {
       await context.webAPI.updateRecord(entityName, task.id, {
         [props.progressFieldName]: task.progress,
       });
     } catch (e) {
       context.navigation.openErrorDialog(e);
-      context.parameters.entityDataSet.refresh();
-      return false;
+      resultState = false;
     }
-    return true;
+    context.parameters.entityDataSet.refresh();
+    return resultState;
   };
 
   const handleOpenRecord = async (task: Task) => {
-    const recordRef = context.parameters.entityDataSet.records[
-      task.id
-    ].getNamedReference();
-
+    const recordRef =
+      context.parameters.entityDataSet.records[task.id].getNamedReference();
     context.parameters.entityDataSet.openDatasetItem(recordRef);
   };
 
@@ -106,6 +102,11 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
     } else {
       context.parameters.entityDataSet.clearSelectedRecordIds();
     }
+  };
+
+  const handleExpanderClick = (task: Task) => {
+    setUpdateEvent(true);
+    props.onExpanderStateChange(task.id, !!task.hideChildren);
   };
 
   // Styling
@@ -178,8 +179,8 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
         onDoubleClick={handleOpenRecord}
         onDateChange={handleDateChange}
         onSelect={handleSelect}
+        onExpanderClick={handleExpanderClick}
       />
-      <GanttFooter context={context} currentRecordsCount={props.tasks.length} />
     </div>
   );
 };

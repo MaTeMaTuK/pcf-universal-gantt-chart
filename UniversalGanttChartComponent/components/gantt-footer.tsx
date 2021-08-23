@@ -1,4 +1,4 @@
-import * as React from "react";
+/*import * as React from "react";
 import { IInputs } from "../generated/ManifestTypes";
 
 export const GanttFooter: React.FunctionComponent<{
@@ -35,3 +35,4 @@ export const GanttFooter: React.FunctionComponent<{
     </div>
   );
 };
+*/

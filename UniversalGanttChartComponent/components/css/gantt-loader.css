@@ -1,0 +1,95 @@
+.loader-modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: rgba(31, 32, 41, 0.1);
+  pointer-events: none;
+  transition: opacity 250ms 700ms ease;
+  box-sizing: border-box;
+}
+
+.loader-roller {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.loader-roller div {
+  animation: loader-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.loader-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0078d4;
+  margin: -4px 0 0 -4px;
+}
+.loader-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.loader-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.loader-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.loader-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.loader-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.loader-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.loader-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.loader-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.loader-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.loader-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.loader-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.loader-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.loader-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.loader-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.loader-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.loader-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes loader-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,28 +1,45 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import { Xrm } from "./xrm";
-import DataSetInterfaces = ComponentFramework.PropertyHelper.DataSetApi;
 import * as ReactDOM from "react-dom";
 import * as React from "react";
 import { Task, ViewMode } from "gantt-task-react";
 import { UniversalGantt } from "./components/universal-gantt";
 import { generate } from "@ant-design/colors";
+import { TaskType } from "gantt-task-react/dist/types/public-types";
+
 type DataSet = ComponentFramework.PropertyTypes.DataSet;
 
 export class UniversalGanttChartComponent
-  implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+  implements ComponentFramework.StandardControl<IInputs, IOutputs>
+{
   private _container: HTMLDivElement;
   private _displayNameStr = "title";
   private _scheduledStartStr = "startTime";
   private _scheduledEndStr = "endTime";
   private _progressStr = "progress";
+  private _taskTypeOption = "taskTypeOption";
+  private _parentRecordStr = "parentRecord";
   private _displayColorText = "displayColorText";
   private _displayColorOption = "displayColorOption";
+  private _dataSetName = "entityDataSet";
+  private _defaultEntityColor = "#2975B2";
+  private _defaultTaskType: TaskType = "task";
   private _viewMode: ViewMode;
   private _crmUserTimeOffset: number;
   private _dataSet: DataSet;
+  private _locale: string;
+  private _tasks: Task[];
+  private _taskTypeMap: any;
+  private _projects: {
+    [index: string]: boolean;
+  };
+  private _updateEvent: boolean;
 
   constructor() {
     this.handleViewModeChange = this.handleViewModeChange.bind(this);
+    this.handleExpanderStateChange = this.handleExpanderStateChange.bind(this);
+    this.generateColorTheme = this.generateColorTheme.bind(this);
+    this.setUpdateEvent = this.setUpdateEvent.bind(this);
   }
 
   public init(
@@ -38,6 +55,8 @@ export class UniversalGanttChartComponent
     this._crmUserTimeOffset =
       context.userSettings.getTimeZoneOffsetMinutes(new Date()) +
       new Date().getTimezoneOffset();
+    this._projects = {};
+    context.parameters.entityDataSet.paging.setPageSize(5000);
   }
 
   public updateView(context: ComponentFramework.Context<IInputs>): void {
@@ -64,11 +83,22 @@ export class UniversalGanttChartComponent
       return;
 
     try {
-      const tasks = await this.generateTasks(
-        context,
-        this._dataSet,
-        !!progressField
-      );
+      if (
+        context.updatedProperties.indexOf(this._dataSetName) !== -1 ||
+        this._updateEvent
+      ) {
+        this._tasks = await this.generateTasks(
+          context,
+          this._dataSet,
+          !!progressField
+        );
+        this._updateEvent = false;
+      }
+      const tasks = this._tasks;
+
+      if (!this._locale) {
+        this._locale = await this.getLocalCode(context);
+      }
       const listCellWidth = !!context.parameters.listCellWidth.raw
         ? `${context.parameters.listCellWidth.raw}px`
         : "";
@@ -94,9 +124,9 @@ export class UniversalGanttChartComponent
 
       let ganttHeight: number | undefined;
       if (context.mode.allocatedHeight !== -1) {
-        ganttHeight = context.mode.allocatedHeight - 85;
+        ganttHeight = context.mode.allocatedHeight - 15;
       } else if (context.parameters.isSubgrid.raw === "no") {
-        ganttHeight = this._container.offsetHeight - 145;
+        ganttHeight = this._container.offsetHeight - 100;
       }
 
       //width setup
@@ -110,7 +140,6 @@ export class UniversalGanttChartComponent
         context.parameters.displayDateFormat.raw === "datetime";
 
       const fontSize = context.parameters.fontSize.raw || "14px";
-
       //create gantt
       const gantt = React.createElement(UniversalGantt, {
         context,
@@ -130,6 +159,8 @@ export class UniversalGanttChartComponent
         isProgressing: !!progressField,
         viewMode: this._viewMode,
         includeTime: includeTime,
+        locale: this._locale,
+        rtl: context.userSettings.isRTL,
         crmUserTimeOffset: this._crmUserTimeOffset,
         fontSize,
         columnWidthQuarter,
@@ -138,6 +169,8 @@ export class UniversalGanttChartComponent
         columnWidthWeek,
         columnWidthMonth,
         onViewChange: this.handleViewModeChange,
+        onExpanderStateChange: this.handleExpanderStateChange,
+        setUpdateEvent: this.setUpdateEvent,
       });
 
       ReactDOM.render(gantt, this._container);
@@ -165,6 +198,10 @@ export class UniversalGanttChartComponent
       const name = <string>record.getValue(this._displayNameStr);
       const start = <string>record.getValue(this._scheduledStartStr);
       const end = <string>record.getValue(this._scheduledEndStr);
+      const taskTypeOption = <string>record.getValue(this._taskTypeOption);
+      const parentRecord = <ComponentFramework.EntityReference>(
+        record.getValue(this._parentRecordStr)
+      );
       const progress = isProgressing
         ? Number(record.getValue(this._progressStr))
         : 0;
@@ -174,7 +211,10 @@ export class UniversalGanttChartComponent
         (c) => c.alias == this._displayColorOption
       );
       const optionLogicalName = !!optionColum ? optionColum.name : "";
-
+      const taskType = this.getTaskType(
+        taskTypeOption,
+        context.parameters.taskTypeMapping.raw
+      );
       const entRef = record.getNamedReference();
       const entName = entRef.etn || <string>(<any>entRef).logicalName;
 
@@ -194,19 +234,52 @@ export class UniversalGanttChartComponent
       }
 
       if (!name || !start || !end) continue;
-      tasks.push({
-        id: record.getRecordId(),
-        name,
-        start: new Date(
-          new Date(start).getTime() + this._crmUserTimeOffset * 60000
-        ),
-        end: new Date(
-          new Date(end).getTime() + this._crmUserTimeOffset * 60000
-        ),
-        progress: progress,
-        isDisabled: isDisabled,
-        styles: { ...entityColorTheme },
-      });
+      try {
+        const taskId = record.getRecordId();
+        const task: Task = {
+          id: taskId,
+          name,
+          start: new Date(
+            new Date(start).getTime() + this._crmUserTimeOffset * 60000
+          ),
+          end: new Date(
+            new Date(end).getTime() + this._crmUserTimeOffset * 60000
+          ),
+          progress: progress,
+          type: taskType,
+          isDisabled: isDisabled,
+          styles: { ...entityColorTheme },
+        };
+        if (taskType === "project") {
+          const expanderState = this._projects[taskId];
+          if (!expanderState) {
+            this._projects[taskId] = false;
+            task.hideChildren = false;
+          } else {
+            task.hideChildren = this._projects[taskId];
+          }
+        }
+        if (parentRecord) {
+          const parentRecordId = parentRecord.id.guid;
+          const parentRecordRef = dataset.records[parentRecordId];
+          if (parentRecordRef) {
+            const parentType = this.getTaskType(
+              <string>parentRecordRef.getValue(this._taskTypeOption),
+              context.parameters.taskTypeMapping.raw
+            );
+            if (parentType === "project") {
+              task.project = parentRecordId;
+            } else {
+              task.dependencies = [parentRecordId];
+            }
+          }
+        }
+        tasks.push(task);
+      } catch (e) {
+        throw new Error(
+          `Create task error. Record id: ${record.getRecordId()}, name: ${name}, start time: ${start}, end time: ${end}, progress: ${progress}. Error text ${e}`
+        );
+      }
     }
     return tasks;
   }
@@ -218,7 +291,7 @@ export class UniversalGanttChartComponent
     optionValue: string,
     optionLogicalName: string
   ) {
-    let entityColor = "#2975B2";
+    let entityColor = this._defaultEntityColor;
     //Model App
     if (context.mode.allocatedHeight === -1 && !colorText) {
       if (optionValue) {
@@ -264,10 +337,49 @@ export class UniversalGanttChartComponent
     };
   }
 
+  private getTaskType(
+    taskTypeOption: string,
+    taskTypeMapping: string | null
+  ): TaskType {
+    let taskType: TaskType = this._defaultTaskType;
+    if (taskTypeOption && taskTypeMapping) {
+      if (!this._taskTypeMap) {
+        this._taskTypeMap = JSON.parse(taskTypeMapping);
+      }
+      taskType = <TaskType>this._taskTypeMap[taskTypeOption];
+    }
+    return taskType;
+  }
+
   private handleViewModeChange(viewMode: ViewMode) {
     this._viewMode = viewMode;
   }
 
+  private handleExpanderStateChange(itemId: string, expanderState: boolean) {
+    this._projects[itemId] = expanderState;
+    this._dataSet.refresh();
+  }
+
+  private async getLocalCode(context: ComponentFramework.Context<IInputs>) {
+    try {
+      const languages = await context.webAPI.retrieveMultipleRecords(
+        "languagelocale",
+        `?$select=code&$filter=localeid eq ${context.userSettings.languageId}`
+      );
+      if (languages.entities.length > 0) {
+        const code = languages.entities[0].code;
+        return code;
+      }
+    } catch (e) {
+      context.navigation.openErrorDialog(e);
+    }
+
+    return "en"; // English
+  }
+
+  private setUpdateEvent(updateEvent: boolean) {
+    this._updateEvent = updateEvent;
+  }
   /**
    * It is called by the framework prior to a control receiving new data.
    * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”

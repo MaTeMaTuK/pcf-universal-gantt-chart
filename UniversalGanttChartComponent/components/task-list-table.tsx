@@ -14,6 +14,7 @@ export const creatTaskListLocal = (
   tasks: Task[];
   selectedTaskId: string;
   setSelectedTask: (taskId: string) => void;
+  onExpanderClick: (task: Task) => void;
 }> => {
   return ({
     rowHeight,
@@ -24,6 +25,7 @@ export const creatTaskListLocal = (
     locale,
     selectedTaskId,
     setSelectedTask,
+    onExpanderClick,
   }) => {
     return (
       <div
@@ -34,27 +36,34 @@ export const creatTaskListLocal = (
         }}
       >
         {tasks.map((t) => {
+          let expanderSymbol = "";
+          if (t.hideChildren === false) {
+            expanderSymbol = "▼";
+          } else if (t.hideChildren === true) {
+            expanderSymbol = "▶";
+          }
           return (
             <div
               className="Gantt-Task-List_Row"
               style={{ height: rowHeight }}
               key={`${t.id}row`}
-            >
-              <div
-                className={
-                  "Gantt-Task-List_Cell Gantt-Task-List_Cell-Select__Icon" +
-                  (selectedTaskId === t.id
-                    ? " Gantt-Task-List_Cell-Select__Selected"
-                    : "")
+              onClick={() => {
+                if (selectedTaskId === t.id) {
+                  setSelectedTask("");
+                } else {
+                  setSelectedTask(t.id);
                 }
-                onClick={() => {
-                  if (selectedTaskId === t.id) {
-                    setSelectedTask("");
-                  } else {
-                    setSelectedTask(t.id);
+              }}
+            >
+              <div className="Gantt-Task-List_Cell">
+                <div
+                  className={
+                    selectedTaskId === t.id
+                      ? "Gantt-Task-List-Checkbox__Checked"
+                      : "Gantt-Task-List-Checkbox"
                   }
-                }}
-              />
+                ></div>
+              </div>
               {/**
                * Name
                */}
@@ -64,11 +73,29 @@ export const creatTaskListLocal = (
                   minWidth: rowWidth,
                   maxWidth: rowWidth,
                 }}
-                onClick={() => onClick(t)}
                 title={t.name}
               >
-                &nbsp;
-                <span className="Gantt-Task-List_Cell__Link">{t.name}</span>
+                <div className="Gantt-Task-List_Name-Container">
+                  <div
+                    className={
+                      expanderSymbol
+                        ? "Gantt-Task-List_Cell__Expander"
+                        : "Gantt-Task-List_Cell__Empty-Expander"
+                    }
+                    onClick={(e) => {
+                      onExpanderClick(t);
+                      e.stopPropagation();
+                    }}
+                  >
+                    {expanderSymbol}
+                  </div>
+                  <div
+                    className="Gantt-Task-List_Cell__Link"
+                    onClick={() => onClick(t)}
+                  >
+                    {t.name}
+                  </div>
+                </div>
               </div>
               {/**
                * Start Time
@@ -78,13 +105,6 @@ export const creatTaskListLocal = (
                 style={{
                   minWidth: rowWidth,
                   maxWidth: rowWidth,
-                }}
-                onClick={() => {
-                  if (selectedTaskId === t.id) {
-                    setSelectedTask("");
-                  } else {
-                    setSelectedTask(t.id);
-                  }
                 }}
                 title={formatDateShort(t.start, includeTime)}
               >
@@ -98,13 +118,6 @@ export const creatTaskListLocal = (
                 style={{
                   minWidth: rowWidth,
                   maxWidth: rowWidth,
-                }}
-                onClick={() => {
-                  if (selectedTaskId === t.id) {
-                    setSelectedTask("");
-                  } else {
-                    setSelectedTask(t.id);
-                  }
                 }}
                 title={formatDateShort(t.end, includeTime)}
               >

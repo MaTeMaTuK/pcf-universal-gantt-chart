@@ -13,6 +13,12 @@
   <SolutionPluginAssemblies />
   <EntityDataProviders />
   <Languages>
+    <Language>1029</Language>
+    <Language>1031</Language>
     <Language>1033</Language>
+    <Language>1046</Language>
+    <Language>1053</Language>
+    <Language>1058</Language>
+    <Language>3082</Language>
   </Languages>
 </ImportExportXml>

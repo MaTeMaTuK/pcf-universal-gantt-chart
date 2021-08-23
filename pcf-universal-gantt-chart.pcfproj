@@ -8,8 +8,8 @@
   <Import Project="$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Pcf.props" Condition="Exists('$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Pcf.props')"/>
   
   <PropertyGroup>
-    <Name>universal-gantt-chart</Name>
-    <ProjectGuid>053a49a9-fc4a-44f3-bb97-03640810cf29</ProjectGuid>
+    <Name>pcf-universal-gantt-chart</Name>
+    <ProjectGuid>bf42d669-e7e4-40d3-a77e-d6e97f7c22d2</ProjectGuid>
     <OutputPath>$(MSBuildThisFileDirectory)out\controls</OutputPath>
   </PropertyGroup>
 
@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerApps.MSBuild.Pcf" Version="1.*"/>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
