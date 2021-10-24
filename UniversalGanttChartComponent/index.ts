@@ -6,6 +6,7 @@ import { Task, ViewMode } from "gantt-task-react";
 import { UniversalGantt } from "./components/universal-gantt";
 import { generate } from "@ant-design/colors";
 import { TaskType } from "gantt-task-react/dist/types/public-types";
+import { isErrorDialogOptions } from "./helper";
 
 type DataSet = ComponentFramework.PropertyTypes.DataSet;
 
@@ -28,18 +29,15 @@ export class UniversalGanttChartComponent
   private _crmUserTimeOffset: number;
   private _dataSet: DataSet;
   private _locale: string;
-  private _tasks: Task[];
   private _taskTypeMap: any;
   private _projects: {
     [index: string]: boolean;
   };
-  private _updateEvent: boolean;
 
   constructor() {
     this.handleViewModeChange = this.handleViewModeChange.bind(this);
     this.handleExpanderStateChange = this.handleExpanderStateChange.bind(this);
     this.generateColorTheme = this.generateColorTheme.bind(this);
-    this.setUpdateEvent = this.setUpdateEvent.bind(this);
   }
 
   public init(
@@ -83,18 +81,11 @@ export class UniversalGanttChartComponent
       return;
 
     try {
-      if (
-        context.updatedProperties.indexOf(this._dataSetName) !== -1 ||
-        this._updateEvent
-      ) {
-        this._tasks = await this.generateTasks(
-          context,
-          this._dataSet,
-          !!progressField
-        );
-        this._updateEvent = false;
-      }
-      const tasks = this._tasks;
+      const tasks = await this.generateTasks(
+        context,
+        this._dataSet,
+        !!progressField
+      );
 
       if (!this._locale) {
         this._locale = await this.getLocalCode(context);
@@ -140,6 +131,7 @@ export class UniversalGanttChartComponent
         context.parameters.displayDateFormat.raw === "datetime";
 
       const fontSize = context.parameters.fontSize.raw || "14px";
+      debugger;
       //create gantt
       const gantt = React.createElement(UniversalGantt, {
         context,
@@ -170,7 +162,6 @@ export class UniversalGanttChartComponent
         columnWidthMonth,
         onViewChange: this.handleViewModeChange,
         onExpanderStateChange: this.handleExpanderStateChange,
-        setUpdateEvent: this.setUpdateEvent,
       });
 
       ReactDOM.render(gantt, this._container);
@@ -371,14 +362,14 @@ export class UniversalGanttChartComponent
         return code;
       }
     } catch (e) {
-      context.navigation.openErrorDialog(e);
+      if (isErrorDialogOptions(e)) {
+        context.navigation.openErrorDialog(e);
+      } else {
+        console.error(e);
+      }
     }
 
     return "en"; // English
-  }
-
-  private setUpdateEvent(updateEvent: boolean) {
-    this._updateEvent = updateEvent;
   }
   /**
    * It is called by the framework prior to a control receiving new data.

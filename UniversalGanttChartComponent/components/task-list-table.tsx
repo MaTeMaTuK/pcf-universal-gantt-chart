@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Task } from "gantt-task-react";
 
-export const creatTaskListLocal = (
+export const createTaskListLocal = (
   includeTime: boolean,
   onClick: (task: Task) => void,
   formatDateShort: (value: Date, includeTime?: boolean) => string

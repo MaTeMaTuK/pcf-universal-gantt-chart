@@ -12,7 +12,8 @@ import { createHeaderLocal } from "./task-list-header";
 import { ViewSwitcher } from "./view-switcher";
 import { IInputs } from "../generated/ManifestTypes";
 import { createTooltip } from "./gantt-tooltip";
-import { creatTaskListLocal } from "./task-list-table";
+import { createTaskListLocal } from "./task-list-table";
+import { isErrorDialogOptions } from "../helper";
 
 export type UniversalGanttProps = {
   context: ComponentFramework.Context<IInputs>;
@@ -40,14 +41,14 @@ export type UniversalGanttProps = {
   columnWidthMonth: number;
   onViewChange: (viewMode: ViewMode) => void;
   onExpanderStateChange: (itemId: string, expanderState: boolean) => void;
-  setUpdateEvent: (updateEvent: boolean) => void;
 } & EventOption &
   DisplayOption;
 export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   props
 ) => {
+  debugger;
   const [view, setView] = React.useState(props.viewMode);
-  const { context, setUpdateEvent } = props;
+  const { context } = props;
   // Events
   const handleDateChange = async (task: Task) => {
     const recordRef =
@@ -65,7 +66,11 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
         ),
       });
     } catch (e) {
-      context.navigation.openErrorDialog(e);
+      if (isErrorDialogOptions(e)) {
+        context.navigation.openErrorDialog(e);
+      } else {
+        console.error(e);
+      }
       resultState = false;
     }
     context.parameters.entityDataSet.refresh();
@@ -83,7 +88,11 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
         [props.progressFieldName]: task.progress,
       });
     } catch (e) {
-      context.navigation.openErrorDialog(e);
+      if (isErrorDialogOptions(e)) {
+        context.navigation.openErrorDialog(e);
+      } else {
+        console.error(e);
+      }
       resultState = false;
     }
     context.parameters.entityDataSet.refresh();
@@ -105,7 +114,6 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
   };
 
   const handleExpanderClick = (task: Task) => {
-    setUpdateEvent(true);
     props.onExpanderStateChange(task.id, !!task.hideChildren);
   };
 
@@ -135,7 +143,7 @@ export const UniversalGantt: React.FunctionComponent<UniversalGanttProps> = (
       props.includeTime,
       formatDateShort
     ),
-    TaskListTable: creatTaskListLocal(
+    TaskListTable: createTaskListLocal(
       props.includeTime,
       handleOpenRecord,
       formatDateShort

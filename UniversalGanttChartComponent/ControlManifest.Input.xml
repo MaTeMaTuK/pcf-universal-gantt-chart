@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="UniversalGanttGridComponent" constructor="UniversalGanttChartComponent" version="0.1.4" display-name-key="Universal Gantt Chart Component" description-key="Component shows tasks on a timeline. You can move them on the chart." control-type="standard" >
+  <control namespace="UniversalGanttGridComponent" constructor="UniversalGanttChartComponent" version="0.1.5" display-name-key="Universal Gantt Chart Component" description-key="Component shows tasks on a timeline. You can move them on the chart." control-type="standard" >
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -17,21 +17,25 @@
       <domain></domain>
       -->
     </external-service-usage>
+    <type-group name="Date.All">
+       <type>DateAndTime.DateAndTime</type>
+       <type>DateAndTime.DateOnly</type>
+    </type-group>
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
     <data-set name="entityDataSet" display-name-key="Entity-Grid" cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFind:true">
-      <property-set name="title" display-name-key="Title" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="bound" required="true" />
-      <property-set name="startTime" display-name-key="Start" description-key="Scheduled start date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
-      <property-set name="endTime" display-name-key="End" description-key="Scheduled end date and time" of-type="DateAndTime.DateAndTime" usage="bound" required="true" />
-      <property-set name="progress" display-name-key="Progress" description-key="From 0 to 100. Whole Number" of-type="Whole.None" usage="bound" required="false" />
-      <property-set name="parentRecord" display-name-key="Parent Record" description-key="Parent record reference" of-type="Lookup.Simple" usage="bound" required="false" />
+      <property-set name="title" display-name-key="Title" description-key="Record Name for displaying on grid" of-type="SingleLine.Text" usage="input" required="true" />
+      <property-set name="startTime" display-name-key="Start" description-key="Scheduled start date and time" of-type-group="Date.All" usage="input" required="true" />
+      <property-set name="endTime" display-name-key="End" description-key="Scheduled end date and time" of-type-group="Date.All" usage="input" required="true" />
+      <property-set name="progress" display-name-key="Progress" description-key="From 0 to 100. Whole Number" of-type="Whole.None" usage="input" required="false" />
+      <property-set name="parentRecord" display-name-key="Parent Record" description-key="Parent record reference" of-type="Lookup.Simple" usage="input" required="false" />
       <property-set name="taskTypeOption" display-name-key="Task Type(Option)" 
         description-key="Specifies record type. Task, milestone, project. You are able to configure option-text mapping in Task Type Mapping parameter." of-type="OptionSet" 
-        usage="bound" required="false" 
+        usage="input" required="false" 
       />
       <property-set name="displayColorOption" 
-        display-name-key="Display Color(Option)" description-key="Specifies record color by option value(hex code)" of-type="OptionSet" usage="bound" required="false" />
+        display-name-key="Display Color(Option)" description-key="Specifies record color by option value(hex code)" of-type="OptionSet" usage="input" required="false" />
       <property-set name="displayColorText" 
-        display-name-key="Display Color(Text)" description-key="Specifies record color by text value(hex code)" of-type="SingleLine.Text" usage="bound" required="false" />
+        display-name-key="Display Color(Text)" description-key="Specifies record color by text value(hex code)" of-type="SingleLine.Text" usage="input" required="false" />
     </data-set>
 
     <property name="displayMode" display-name-key="Display Mode" description-key="Parameter enables or disables progress and datetime controls" of-type="Enum" usage="input" required="true" default-value="editable">
